@@ -1,198 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>CSE Resources Mashup</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="js/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/modern-business.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>FIFA World Cup</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="css/main.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-  </head>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDlJxbn3xmDZxX3Seek-wwSalU6hXQKsqQ&sensor=false"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
-  <body>
+
+</head>
+<body>
+<div class="section-header">
+    <div class="section-header-wrap row">
+        <div class="col-ml-4">
+            <img class="section-header-img" src="http://img.fifa.com/images/tournaments/17/logo/2018_workaround.png">
+        </div>
+        <div class="col-md-8">
+            <h1 class="section-header-title"> FIFA World Cup Fan Guide <p style="font-size: 22px">1930 - 2018</p></h1>
+            <br>
+            <!--
+            <ul class="row">
+                <li class="col-ml-5" style="list-style:none;"><a title="Country" href="index.html"><span class="section-nav">Country</span></a></li>
+                <li class="col-ml-5" style="list-style:none;"><a title="Statistics" href="statistics.html"><span class="section-nav">Statistics</span></a></li>
+            </ul>
+            -->
+        </div>
+</div>
+<div class="ribbon">
+    <a href="https://github.com/UNSW-Data-Rover/comp9321" target="_blank">View Source on GitHub</a>
+</div>
 
 
 <div id="index">
-    <header>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">Carousel</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                <!--<li class="nav-item active">-->
-                    <!--<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
-                <!--</li>-->
-                <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="#">Link</a>-->
-                <!--</li>-->
-                <!--<li class="nav-item">-->
-                    <!--<a class="nav-link disabled" href="#">Disabled</a>-->
-                <!--</li>-->
-            </ul>
-            <form class="form-inline mt-2 mt-md-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">FIFA Fan Guide</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="../client/index.html">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="../client/statistics.html">Statistics</a>
+      </li>
+     
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search a country" aria-label="Search" v-model="country">
+      <button class="btn btn-outline-success my-2 my-sm-0"  @click.prevent="mapping">Search</button>
+    </form>
+  </div>
+</nav>
+
+
+
+
+
+<div class="section-container row">
+        <div class="col-md-8 section-table">
+            <table  class="table table-hover" id="index">
+                <thead>
+                <tr>
+                    <th scope="col"> Year</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Winner</th>
+                    <th scope="col">Runners-Up</th>
+                    <th scope="col"> Third</th>
+                    <th scope="col">Fourth</th>
+                    <th scope="col">Goals Scored</th>
+                    <th scope="col">Qualified Teams</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="r in rows">
+                    <td>{{ r.Year }}</td>
+                    <td>
+
+                    <time-eater :title='r.Country' :year='r.Year' @unhappy="table($event)"></time-eater>
+
+                    </td>
+                    <td>{{ r.Champion }}</td>
+                    <td>{{ r.RunnersUp }}</td>
+                    <td>{{ r.Third }}</td>
+                    <td>{{ r.Fourth }}</td>
+                    <td>{{ r.TotalGoals }}</td>
+                    <td>{{ r.QualifiedTeams }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="section-chart">
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
-    </nav>
-</header>
 
-    <header>
-      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-          <!-- Slide One - Set the background image for this slide in the line below -->
-          <div class="carousel-item active" style="background-image: url('http://placehold.it/1900x1080')">
-            <div class="carousel-caption d-none d-md-block">
-              <h3>{{ first_slide }}</h3>
-              <!--<p>This is a description for the first slide.</p>-->
-            </div>
-          </div>
-          <!-- Slide Two - Set the background image for this slide in the line below -->
-          <div class="carousel-item" style="background-image: url('http://placehold.it/1900x1080')">
-            <div class="carousel-caption d-none d-md-block">
-              <h3>{{second_slide}}</h3>
-              <!--<p>This is a description for the second slide.</p>-->
-            </div>
-          </div>
-          <!-- Slide Three - Set the background image for this slide in the line below -->
-          <div class="carousel-item" style="background-image: url('http://placehold.it/1900x1080')">
-            <div class="carousel-caption d-none d-md-block">
-              <h3>{third_slide}</h3>
-              <!--<p>This is a description for the third slide.</p>-->
-            </div>
-          </div>
+
+        <div class="col-md-4 section-country">
+            <br>
+            <h5>Hosting Country {{year}}</h5><hr>
+            <img class="country-flag"
+                 :src="img_code">
+            <img class="country-flag" id="jpflag" src="svg/JP.svg" style="float:right;display: none">
+            <br/>
+            <table class="table">
+                <thead>
+                <th>{{c.Country}}</th>
+                <th></th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Region</td>
+                    <td>{{ c.Region }}</td>
+                </tr>
+                <tr>
+                    <td>Capital City</td>
+                    <td>{{c["Capital city"]}}</td>
+                </tr>
+                <tr>
+                    <td>Currency</td>
+                    <td>{{c.Currency}}</td>
+                </tr>
+                <tr>
+                    <td>Population (000, 2017)</td>
+                    <td>{{c["Population (proj, 000)"]}}</td>
+                </tr>
+                <tr>
+                    <td>Pop. density (per km2, 2017)</td>
+                    <td>{{c["Pop density (per sq km)"]}}</td>
+                </tr>
+                <tr>
+                    <td>Area (sq km)</td>
+                    <td>{{c["Surface area (sq km)"]}}</td>
+                </tr>
+           
+
+                </tbody>
+            </table>
+
+           
+
+            <div id="googleMap" style="width:460px;height:400px;"></div>
         </div>
-        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
-      </div>
-    </header>
-
-    <!-- Page Content -->
-    <div class="container">
-
-      <!-- Marketing Icons Section -->
-
-
-      <!-- Portfolio Section -->
-      <br/>
-
-      <div class="row">
-        <div class="col-lg-4 col-sm-6 portfolio-item">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="/SandKing-CSE-Hackathon/client/course.html">{{ code1 }}</a>
-              </h4>
-              <p class="card-text">{{ course1 }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-6 portfolio-item">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="/SandKing-CSE-Hackathon/client/course.html">{{ code2 }}</a>
-              </h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-6 portfolio-item">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="#">{{ code3 }}</a>
-              </h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos quisquam, error quod sed cumque, odio distinctio velit nostrum temporibus necessitatibus et facere atque iure perspiciatis mollitia recusandae vero vel quam!</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-6 portfolio-item">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="#">{{ code4 }}</a>
-              </h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-6 portfolio-item">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="#">{{ code5 }}</a>
-              </h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-sm-6 portfolio-item">
-          <div class="card h-100">
-            <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-            <div class="card-body">
-              <h4 class="card-title">
-                <a href="#">{{ code6 }}</a>
-              </h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque earum nostrum suscipit ducimus nihil provident, perferendis rem illo, voluptate atque, sit eius in voluptates, nemo repellat fugiat excepturi! Nemo, esse.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /.row -->
 
 
 
-      <hr>
-
-
-
-    </div>
-    <!-- /.container -->
 </div>
-    <!-- Footer -->
-    <footer class="py-5 bg-dark">
-      <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; SandKing-CSE-Hackathon 2018</p>
-      </div>
-      <!-- /.container -->
-    </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="js/index.js"></script>
-    <script src="js/vendor/jquery/jquery.min.js"></script>
-    <script src="js/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  </body>
-
+</div>
+</div>
+</body>
+<script src="js/main.js"></script>
 </html>

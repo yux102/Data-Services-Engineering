@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIFA World Cup</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="css/main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBzE9xAESye6Kde-3hT-6B90nfwUkcS8Yw&sensor=false"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+<div class="section-header">
+    <div class="section-header-wrap row">
+        <div class="col-ml-4">
+            <img class="section-header-img" src="http://img.fifa.com/images/tournaments/17/logo/2018_workaround.png">
+        </div>
+        <div class="col-md-8">
+            <h1 class="section-header-title"> FIFA World Cup Fan Guide <p style="font-size: 22px">1930 - 2018</p></h1>
+            <br>
+            <!--
+            <ul class="row">
+                <li class="col-ml-5" style="list-style:none;"><a title="Country" href="index.html"><span class="section-nav">Country</span></a></li>
+                <li class="col-ml-5" style="list-style:none;"><a title="Statistics" href="statistics.html"><span class="section-nav">Statistics</span></a></li>
+            </ul>
+            -->
+        </div>
+    </div>
+</div>
+<div class="ribbon">
+    <a href="https://github.com/UNSW-Data-Rover/comp9321" target="_blank">View Source on GitHub</a>
+</div>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">FIFA Fan Guide</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="../client/index.html">Home <span class="sr-only">(current)</span></a>
+      </li >
+      <li class="nav-item active">
+        <a class="nav-link" href="../client/statistics.html">Statistics</a>
+      </li>
+     
+    </ul>
+  </div>
+</nav>
+
+
+
+
+
+<div id="stat">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary py-md-3">
+
+
+  <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent" >
+    <p class="navbar-brand"><strong>Compare two countries</strong></p>
+    <ul class="nav navbar-nav navbar-center">
+      <li class="nav-item active"  style="margin-left:30px;margin-right:30px;">
+        <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Brazil" aria-label="Search" v-model="compare_country1">
+      <button class="btn btn btn-outline-light  my-2 my-sm-0"  @click.prevent="compare">Compare</button>  &emsp;&emsp;
+    </form>
+       </li>
+      
+      <li class="nav-item">
+        <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Germany" aria-label="Search" v-model="compare_country2">
+      <button class="btn btn btn-outline-light my-2 my-sm-0"  @click.prevent="compare">Compare</button>
+    </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+
+              <div class="col">
+       <table id="table2" class="table table-hover">
+           <tr v-for="r in ctable">
+            <td>
+                  <table-selector :country='r' @unhappy="change1($event)"></table-selector>
+            </td>
+          </tr>
+        </table>
+      </div>
+    
+    
+
+     <div class="col-9">
+        <div class="section-container">
+            <div class="section-contrast row">
+                    <div class = "col-3">
+                        <img class="country-flag" :src="img_code1">
+                    </div>
+                    <div class = "col-2">
+                        <h1>{{ratio1}}</h1>
+                    </div>
+                    <div class = "col-2">
+                        <h1>VS</h1>
+                    </div>
+                    <div class = "col-2">
+                        <h1>{{ratio2}}</h1>
+                    </div>
+                    <div class = "col-3">
+                        <img class="country-flag" :src="img_code2">
+                    </div>
+            </div>
+
+
+            <div class="section-table1">
+                <table id="table2" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Year</th>
+                            <th scope="col">Stage</th>
+                            <th scope="col">Home Team</th>
+                            <th scope="col">Home Team Goals</th>
+                            <th scope="col">Away Team</th>
+                            <th scope="col">Away Team Goals</th>
+                           
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        <tr v-for="r in statistics">
+                            <td>{{ r["Year"] }}</td>
+                            <td>{{ r["Stage"] }}</td>
+                            <td>{{ r["Home Team"] }}</td>
+                            <td>{{ r["Home Team Goals"] }}</td>
+                            <td>{{ r["Away Team"]}}</td>
+                            <td>{{ r["Away Team Goals"] }}</td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+      </div>
+
+        
+
+        <div class="col">
+       <table id="table2" class="table table-hover">
+           <tr v-for="r in ctable">
+            <td>
+                  <table-selector :country='r' @unhappy="change2($event)"></table-selector>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      
+
+  </div>
+
+
+</div>
+</div>
+
+
+
+</body>
+<script src="js/stats.js"></script>
+</html>
